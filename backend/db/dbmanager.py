@@ -17,10 +17,14 @@ class DBManager(ABC):
         return new
 
     @classmethod
-    def insert_record(cls, records):
+    def insert_record(cls, data: object):
         fields = ""
         holders = ""
-        for k, v in records.items():
+        records = data.__dict__
+        for k in list(records.keys()):
+            if records[k] is None:
+                del records[k]
+                continue
             fields += f", {k}" if fields != "" else f"{k}"
             holders += ", %s" if holders != "" else "%s"
         sql = f"INSERT INTO {cls._tablename} ({fields}) values ({holders})"
@@ -35,7 +39,6 @@ class DBManager(ABC):
         session = DBConnect()
         cursor = session.get_cursor()
         try:
-            print(DBManager.__queries)
             for query in DBManager.__queries:
                 print(query)
                 cursor.execute(query[0], query[1])
@@ -111,7 +114,6 @@ class DBManager(ABC):
         updates = reduce(lambda key, nextv: f'{key} {nextv} = %s,',
                          list(columns.keys()), '')
         sql = f'UPDATE {tbl} SET {updates[1:-1]} WHERE {tbl}_id = %s'
-        print(sql)
         param_values = tuple(columns.values()) + (entity_id,)
         DBManager.__queries.append((sql, param_values))
         return cls

@@ -7,3 +7,4 @@ pytest==7.3.1
 psycopg2-binary==2.9.9
 wheel
 flask-restful==0.3.10
+bcrypt==4.1.1

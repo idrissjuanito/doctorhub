@@ -1,11 +1,9 @@
 from flask import Response
 from flask_restful import Resource, abort, marshal, reqparse, request
 from flask_restful import marshal_with, fields
-from models.guest import Guest
 from models.hospital import Hospital
 from models.doctor import Doctor
 from models.profile import Profile
-from models.address import Address
 
 
 parser = reqparse.RequestParser()
@@ -22,8 +20,7 @@ class Listings(Resource):
     handles get and put requests for doctors, hospitals
     and guests/patients
     '''
-    classes = {'doctors': Doctor, 'hospitals': Hospital,
-               'guests': Guest, 'address': Address}
+    classes = {'doctors': Doctor, 'hospitals': Hospital}
 
     def get(self, entity):
         '''
@@ -53,25 +50,25 @@ class Listings(Resource):
             resp_fields['results'] = fields.List(fields.Nested(entity_fields))
         return marshal({'results': res}, resp_fields)
 
-    def post(self, entity):
-        '''
-        Handles all post requests to listing endpoints
-        adds the sent data to the entity's relation/table
-        '''
-        reqdata = request.json
-        a = Profile(reqdata['email'])
-        Profile.insert_record(a.__dict__)
-        cls = Listings.classes[entity]
-        del reqdata['email']
-        key = None
-        try:
-            r = cls(**reqdata, profile_id=a.profile_id)
-            key = getattr(r, f'{entity[:-1]}_id')
-        except TypeError:
-            abort(403, message='Bad request')
-        cls.insert_record(r.__dict__)
-        cls.save()
-        return key or 'Something went wrong'
+    # def post(self, entity):
+    #     '''
+    #     Handles all post requests to listing endpoints
+    #     adds the sent data to the entity's relation/table
+    #     '''
+    #     reqdata = request.json
+    #     a = Profile(reqdata['email'])
+    #     Profile.insert_record(a.__dict__)
+    #     cls = Listings.classes[entity]
+    #     del reqdata['email']
+    #     key = None
+    #     try:
+    #         r = cls(**reqdata, profile_id=a.profile_id)
+    #         key = getattr(r, f'{entity[:-1]}_id')
+    #     except TypeError:
+    #         abort(403, message='Bad request')
+    #     cls.insert_record(r.__dict__)
+    #     cls.save()
+    #     return key or 'Something went wrong'
 
     def put(self, entity):
         '''
