@@ -82,6 +82,7 @@ class DBManager(ABC):
     def fetch(cls, limit=""):
         sql = "".join(DBManager.__fetch_queries[:-1])
         prepared_values = DBManager.__fetch_queries[-1]
+        print(prepared_values)
         session = DBConnect()
         cursor = session.get_cursor()
         print(sql)

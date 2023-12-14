@@ -70,37 +70,7 @@ class Listings(Resource):
     #     cls.save()
     #     return key or 'Something went wrong'
 
-    def put(self, entity):
-        '''
-        Handle updates of an entity
-        '''
-        args = parser.parse_args()
-        profile_columns = {}
-        cls = self.classes[entity]
-        for k, v in args.items():
-            if v is None or k == 'id':
-                continue
-            match k:
-                case 'address':
-                    try:
-                        a = self.classes[k](**v)
-                        Address.insert_record(a.__dict__)
-                        profile_columns['address_id'] = a.address_id
-                    except Exception as e:
-                        print(e)
-                        abort(400, message=e)
-                case 'profile':
-                    profile_columns.update(v)
-                case _:
-                    self.classes[k].update_records(args['id'], v)
 
-        if bool(profile_columns):
-            cls.find(fields='profile_id',
-                     filter_values=(args['id'],))
-            profile_id = cls.fetch()['profile_id']
-            Profile.update_records(profile_id, profile_columns)
-        cls.save()
-        return 'successfull update'
 
     @staticmethod
     def parse_resource_fields(entity: str):

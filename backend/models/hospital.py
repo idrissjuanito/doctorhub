@@ -14,9 +14,11 @@ class Hospital(DBManager):
 
     def __init__(self,
                  name: str,
-                 profile_id: str,
-                 reg_number=''):
+                 account_id: str,
+                 profile_id=None,
+                 reg_number=None):
         self.hospital_id = str(uuid4())
-        self.profile_id = profile_id
         self.name = name
         self.reg_number = reg_number
+        self.account_id = account_id
+        self.profile_id = profile_id
