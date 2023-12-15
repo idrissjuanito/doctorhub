@@ -5,7 +5,6 @@ from models.doctor import Doctor
 from models.hospital import Hospital
 from models.profile import Profile
 import bcrypt
-import hashlib
 
 
 parser = reqparse.RequestParser()
@@ -105,6 +104,14 @@ class HospitalResource(ProfileCommon):
                                  type=str,
                                  required=True,
                                  help='Missing hospital name')
+
+    def get(self, payload):
+        '''
+        gets information of a logged in hospital user
+        decorator handles authorization
+        '''
+        print(payload)
+
 
     def post(self):
         '''

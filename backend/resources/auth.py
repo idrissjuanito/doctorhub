@@ -1,7 +1,10 @@
-from flask_restful import Resource, abort, reqparse
+from flask import config
+from flask_restful import Resource, abort, reqparse, request
 from models.account import Account
 from common.utils import generate_jwt
+from jwt.exceptions import DecodeError, InvalidTokenError
 import bcrypt
+import jwt
 
 
 login_parser = reqparse.RequestParser()
@@ -14,15 +17,24 @@ login_parser.add_argument('password',
 
 def authenticator(func):
     def wrapper(*args, **kwargs):
-        if True:
-            return 'not authenticated'
-        return func()
+        from app import config
+        auth_header = request.headers['Authorization']
+        if not auth_header:
+            abort(400, message='Missing auth headers')
+        token = auth_header.split()[1]
+        try:
+            payload = jwt.decode(token, config['SECRET_KEY'], algorithms='HS256')
+            return func(payload)
+        except DecodeError or InvalidTokenError:
+            abort(401, message='unauthorized request')
     return wrapper
 
 
 class Auth(Resource):
+    method_decorators = {'get': [authenticator]}
 
-    def get(self):
+    def get(self, payload):
+        print(payload)
         return "Authenticator"
 
     def post(self):
