@@ -1,5 +1,6 @@
 from flask import Blueprint, Flask
 from flask_restful import Api
+from flask_cors import CORS
 from resources.profile import HospitalResource
 from resources.profile import DoctorResource
 from resources.appointments import Appointments
@@ -14,6 +15,7 @@ profile_bp = Blueprint('profile', __name__)
 listing_api = Api(list_bp)
 profile_api = Api(profile_bp)
 api = Api(app)
+CORS(app, resources={r'/*': {"origins": "*"}})
 
 
 listing_api.add_resource(Listings, "/<string:entity>")
@@ -32,4 +34,4 @@ def teardown_ops(exception):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=6500)

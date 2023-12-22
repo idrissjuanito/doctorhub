@@ -100,7 +100,7 @@ class DBManager(ABC):
                 results = cursor.fetchone()
             return results
         except Exception as e:
-            abort(500, message=e)
+            abort(500, message="Server Error: Something went wrong")
 
     @classmethod
     def join(cls, join, table, on=None):

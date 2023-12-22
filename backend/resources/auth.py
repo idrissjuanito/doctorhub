@@ -1,6 +1,8 @@
 from flask import config
 from flask_restful import Resource, abort, reqparse, request
 from models.account import Account
+from models.doctor import Doctor
+from models.hospital import Hospital
 from common.utils import generate_jwt
 from jwt.exceptions import DecodeError, InvalidTokenError
 import bcrypt
@@ -24,6 +26,8 @@ def authenticator(func):
         token = auth_header.split()[1]
         try:
             payload = jwt.decode(token, config['SECRET_KEY'], algorithms='HS256')
+            Account.find(fields='account_id', filter_values=(payload['account_id'],))
+            user = Account.fetch()
             return func(payload)
         except DecodeError or InvalidTokenError:
             abort(401, message='unauthorized request')
@@ -32,6 +36,7 @@ def authenticator(func):
 
 class Auth(Resource):
     method_decorators = {'get': [authenticator]}
+    account_types = {'doctor': Doctor, 'hospital': Hospital}
 
     def get(self, payload):
         print(payload)
@@ -46,11 +51,24 @@ class Auth(Resource):
             abort(400, message='Bad request missing login data')
         Account.find(filters='email', filter_values=(args['email'],))
         account = Account.fetch()
+        if account is None:
+            abort(404, message="No user found")
         pw = account['password'].encode('utf-8')
         if bcrypt.checkpw(args['password'].encode('utf-8'), pw):
-            payload = {'account_id': account['account_id'], 'acc_type': account['acc_type']}
+            user_model = self.account_types[account['acc_type']]
+            user_model.find(
+                    fields=f'{account["acc_type"]}_id',
+                    filters='account_id',
+                    filter_values=(account['account_id'],))
+            user_id = user_model.fetch()
+            user_id = user_id[f'{account["acc_type"]}_id']
+            payload = {
+                'user_id': user_id,
+                'account_id': account['account_id'],
+                'email': account['email']
+            }
             token = generate_jwt(payload)
-            return token
+            return {'accessToken': token, 'user_id': user_id}
         return 'Not Good'
 
     @staticmethod
