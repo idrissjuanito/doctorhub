@@ -24,7 +24,7 @@ class ProfileCommon(Resource):
         '''
         handles common update tasks for any entity with a profile
         '''
-        expected_args = ['state', 'city', 'address', 'contact']
+        expected_args = ['state', 'city', 'address', 'contact_one', 'contact_two']
 
         for arg in expected_args:
             required = False if arg == 'contact' else True
@@ -38,11 +38,11 @@ class ProfileCommon(Resource):
         return prf
 
     @classmethod
-    def new_account(cls):
+    def new_account(cls, account_type):
         args = parser.parse_args()
         salt = bcrypt.gensalt()
         hashed_pw = bcrypt.hashpw(args['password'].encode('utf-8'), salt)
-        a = Account(args['email'], hashed_pw.decode('utf-8'), acc_type=f'{cls.__name__.lower()}')
+        a = Account(args['email'], hashed_pw.decode('utf-8'), acc_type=account_type)
         Account.insert_record(a)
         return {'account_id': a.account_id, 'email': a.email}
 
@@ -67,7 +67,7 @@ class DoctorResource(ProfileCommon):
         method handles creating new doctor
         '''
         args = self.doctor_parser.parse_args()
-        account = ProfileCommon.new_account()
+        account = ProfileCommon.new_account('doctor')
         d = Doctor(**args, account_id=account['account_id'])
         Doctor.insert_record(d)
         Doctor.save()
@@ -80,7 +80,7 @@ class DoctorResource(ProfileCommon):
         for arg in doc_args:
             profile_args.add_argument(arg, type=str, required=True, help=f"Missing {arg}")
         args = profile_args.parse_args()
-        if current_user['doctor_id'] != args['id']:
+        if current_user['user_id'] != args['id']:
             abort(400, "Bad Request")
         p = Person(args['first_name'], args['last_name'], args['gender'])
         Person.insert_record(p)

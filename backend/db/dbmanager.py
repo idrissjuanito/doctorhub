@@ -105,7 +105,8 @@ class DBManager(ABC):
     @classmethod
     def join(cls, join, table, on=None):
         if on is None:
-            on = f'{table}_id = {cls.__name__.lower()}_id'
+            main_table = f'{cls.__name__.lower()}'
+            on = f'{main_table}.{table}_id = {table}.{table}_id'
         DBManager.__fetch_queries.insert(1, f" {join} JOIN {table} ON {on}")
         return cls
 

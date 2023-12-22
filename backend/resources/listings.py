@@ -37,8 +37,7 @@ class Listings(Resource):
             finder = cls.find()
         if tablename != 'hospital':
             finder = finder.join('LEFT', 'person')
-        profile_join = f'{tablename}.profile_id = profile.profile_id'
-        finder.join('LEFT', 'profile', on=profile_join)
+        finder.join('LEFT', 'profile')
         res = None
         entity_fields = Listings.parse_resource_fields(entity)
         resp_fields = {}
@@ -82,9 +81,13 @@ class Listings(Resource):
         # fields shared by all entities
         base_fields = {
             f'{entity[:-1]}_id': fields.String,
-            'acc_email': fields.String,
-            'contact': fields.String,
-            'profile_pic': fields.String,
+            'email': fields.String,
+            'contact_one': fields.String,
+            'contact_two': fields.String,
+            'state': fields.String,
+            'city': fields.String,
+            'address': fields.String,
+            'picture': fields.String,
         }
 
         # Fields shared by human entities
@@ -99,6 +102,7 @@ class Listings(Resource):
                 res_fields.update({
                     **person_entity_fields,
                     'verified': fields.String,
+                    'hospital_name': fields.String,
                     'speciality': fields.String,
                 })
             case 'guests':

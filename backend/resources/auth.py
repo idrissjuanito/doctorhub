@@ -68,7 +68,7 @@ class Auth(Resource):
                 'email': account['email']
             }
             token = generate_jwt(payload)
-            return {'accessToken': token, 'user_id': user_id}
+            return {'sessionToken': token, 'user_id': user_id}
         return 'Not Good'
 
     @staticmethod
