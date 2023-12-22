@@ -1,0 +1,59 @@
+<form
+	*ngIf="entity == 'doctor'"
+	[formGroup]="doctorForm">
+	<h2 class="self-start">Professional Details</h2>
+	<mat-form-field>
+		<mat-label>Speciality</mat-label>
+		<input matInput
+			   placeholder="Ex. Cardiologist"
+			   formControlName="speciality" required>
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>License number</mat-label>
+		<input matInput
+			   placeholder="Ex. 000000.00000 0000"
+			   formControlName="license_num">
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Hospital Name</mat-label>
+		<input matInput
+			   placeholder="Ex. Regional Hospital Douala"
+			   formControlName="hospital_name">
+	</mat-form-field>
+</form>
+<form *ngIf="entity == 'hospital'" [formGroup]="hospitalForm">
+	<mat-form-field>
+		<mat-label>Name of clinic/hospital</mat-label>
+		<input matInput
+			   placeholder="Ex. Regional hospital Douala"
+			   formControlName="name">
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Hospital registration number</mat-label>
+		<input matInput
+			   placeholder="Ex. Registration number"
+			   formControlName="reg_number">
+	</mat-form-field>
+</form>
+<div *ngIf="entity != ''" class="w-full max-w-[500px] bg-zinc-100">
+	<form [formGroup]="accountForm"
+						  (ngSubmit)="submitAccount(entity)">
+		<h2 class="self-start">Account/Login credentials</h2>
+		<mat-form-field>
+			<mat-label>Email Address</mat-label>
+			<input
+					matInput
+					type="email"
+					placeholder="Ex. drjohndoe@gmail.com"
+					formControlName="email" required>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>Password</mat-label>
+			<input matInput
+				   type="password"
+				   placeholder="********"
+				   formControlName="password" required>
+		</mat-form-field>
+		<button mat-flat-button type="submit" color="primary" class="self-start"> proceed </button>
+	</form>
+	<div>

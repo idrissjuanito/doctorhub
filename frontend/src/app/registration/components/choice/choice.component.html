@@ -1,0 +1,8 @@
+<form>
+	<mat-form-field>
+		<mat-label>I am a ...</mat-label>
+		<mat-select [formControl]="choice">
+			<mat-option *ngFor="let choic of choices" [value]="choic">{{choic}}</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>
