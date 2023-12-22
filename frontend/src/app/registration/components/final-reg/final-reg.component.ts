@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { RegisterService } from 'src/services/registration.service';
 
@@ -20,15 +20,22 @@ export class FinalRegComponent implements OnInit {
 		contact_one: new FormControl(''),
 		contact_two: new FormControl('')
 	})
+	authUser: string | null = ''
 	constructor(
 		private auth: AuthService,
 		private router: Router,
+		private route:  ActivatedRoute,
 		private register: RegisterService){}
 	 ngOnInit(){
-		this.auth.isAuthenticated()	|| this.router.navigate(['/'])
+		this.authUser = this.auth.isAuthenticated()
+		this.authUser || this.router.navigate(['/'])
 	 }
 	submitFinal(){
-		const res = this.register.completeProfile('doctor', this.finalForm.value)
-		if(res) res.subscribe(data => console.log(data))
+		console.log(this.finalForm.value)
+		const user_id = this.route.snapshot.paramMap.get('id')
+		if (user_id){
+			const res = this.register.completeProfile('doctor', user_id, this.finalForm.value)
+			if(res) res.subscribe(data => this.router.navigate(['account', user_id]))
+		}
 	}
 }

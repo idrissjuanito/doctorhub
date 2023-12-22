@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -10,16 +10,21 @@ export class RegisterService {
 		private http: HttpClient,
 		private router: Router){}
 	registerInitial(resource: string, payload: object){
+		interface AuthResp {
+			sessionToken: string
+			user_id: string
+		}
 		const URL = BASE_URL+'/profile/'+resource
-		return this.http.post<{sessionToken: string}>(BASE_URL+'/profile/'+resource, payload)
+		return this.http.post<AuthResp>(BASE_URL+'/profile/'+resource, payload)
 	}
-	completeProfile(resource: string, payload: object) {
-		const URL = BASE_URL+'/profile/'+resource
+	completeProfile(resource: string, user_id: string, payload: object) {
+		const URL = BASE_URL+'/profile/'+resource+'s'
 		const token = localStorage.getItem('sessionToken')
 		if (token == null) return null
 		const httpOptions = {headers: new HttpHeaders({
 			Authorization: 'Bearer '+JSON.parse(token || '')
-		})}
+		}),
+		params: new HttpParams().set('id', user_id)}
 		return this.http.put<string>(URL, payload, httpOptions)
 	}
 }

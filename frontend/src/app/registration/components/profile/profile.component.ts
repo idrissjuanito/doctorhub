@@ -44,8 +44,7 @@ export class ProfileComponent implements OnInit {
 		const res = this.register.registerInitial(entity+'s', formData)
 		res.subscribe(data => {
 			this.auth.authenticate(data['sessionToken'])
-			this.auth.isAuthenticated()
-			this.router.navigate([], {relativeTo: this.route})
+			this.router.navigate([data['user_id']], {relativeTo: this.route})
 		})
 	}
 }

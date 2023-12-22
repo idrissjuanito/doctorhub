@@ -1,2 +1,30 @@
-<h2>The app itself</h2>
-<router-outlet></router-outlet>
+<mat-toolbar color='primary'>
+	<div class='container flex justify-between items-center text-white'>
+		<h2 class='text-white'><a routerLink='/'>Doctorhub</a></h2>
+		<nav class='flex justify-between items-center gap-6'>
+			<a
+				type='button'
+				routerLink='/registration'
+				*ngIf="!auth.isAuthenticated()"
+			>register</a>
+			<a
+				type='button'
+				routerLink='./settings'
+				*ngIf="auth.isAuthenticated()"
+			>settings</a>
+			<a
+				type='button'
+				routerLink='/login'
+				*ngIf="!auth.isAuthenticated()">login</a>
+			<button
+				mat-button
+				(click)='auth.logout()'
+				*ngIf="auth.isAuthenticated()"
+				color='warn'
+			>logout</button>
+		</nav>
+	</div>
+</mat-toolbar>
+<div class="flex flex-col">
+	<router-outlet></router-outlet>
+</div>
