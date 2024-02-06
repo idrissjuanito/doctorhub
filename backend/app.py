@@ -1,6 +1,7 @@
 from flask import Blueprint, Flask
 from flask_restful import Api
 from flask_cors import CORS
+from resources.status import Status
 from resources.profile import HospitalResource
 from resources.profile import DoctorResource
 from resources.appointments import Appointments
@@ -18,6 +19,7 @@ api = Api(app)
 CORS(app, resources={r'/*': {"origins": "*"}})
 
 
+api.add_resource(Status, "/status")
 listing_api.add_resource(Listings, "/<string:entity>")
 api.add_resource(Appointments, "/appointments")
 api.add_resource(Auth, '/auth/login')
