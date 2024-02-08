@@ -5,23 +5,29 @@
 			<a
 				type='button'
 				routerLink='/registration'
+				class="text-base text-purple-200 hover:text-white"
 				*ngIf="!auth.isAuthenticated()"
-			>register</a>
+			>Register</a>
 			<a
 				type='button'
 				routerLink='./settings'
 				*ngIf="auth.isAuthenticated()"
-			>settings</a>
+				class="text-base flex items-center gap-2 text-purple-200 hover:text-white"
+			>
+			<mat-icon>settings</mat-icon> Settings</a>
 			<a
 				type='button'
 				routerLink='/login'
-				*ngIf="!auth.isAuthenticated()">login</a>
+				class="text-base text-purple-200 hover:text-white"
+				*ngIf="!auth.isAuthenticated()">Login</a>
 			<button
-				mat-button
 				(click)='auth.logout()'
 				*ngIf="auth.isAuthenticated()"
-				color='warn'
-			>logout</button>
+				class="flex items-center gap-2 text-base text-purple-200 hover:text-white"
+				color='secondary'
+			>
+				<mat-icon fontIcon="logout"></mat-icon> Logout
+			</button>
 		</nav>
 	</div>
 </mat-toolbar>

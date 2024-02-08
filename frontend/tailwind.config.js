@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {},
 	backgroundImage: {
-		'home-header': "url('../src/assets/images/medical-tech.jpg')"
+		'home-header': "url('../src/assets/images/Stethoscope with Copy Space.jpg')"
 	}
   },
   plugins: [],

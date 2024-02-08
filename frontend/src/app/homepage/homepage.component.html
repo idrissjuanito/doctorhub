@@ -1,24 +1,81 @@
-<div class='h-[700px] w-full bg-home-header bg-cover bg-violet-200 bg-blend-screen flex flex-col items-center justify-center'>
-	<h2 class='text-center !text-3xl md:!text-5xl'>Find a health profession around you</h2>
-	<form class='bg-transparent'>
-		<input type="search" placeholder="Search the doctors" class="searcher" [formControl]="searchTerm">
+<div class='py-44 lg:min-h-[600px] w-full bg-home-header bg-cover bg-violet-500 bg-blend-screen flex flex-col items-center justify-center'>
+	<h1 class='text-center text-3xl md:text-5xl xl:text-6xl lg:w-1/2 text-zinc-700'> Find a health professional around you</h1>
+	<form class='searcher flex justify-between rounded-full my-10'>
+		<input
+			type="search"
+			placeholder="Search the doctors"
+			[formControl]="searchTerm">
+		<button mat-fab color="primary" class="w-5 h-5"><mat-icon>searchoutlined</mat-icon></button>
 	</form>
 </div>
-<div *ngIf='doctors; else noDoctors' class='container py-20'>
-		<mat-card *ngFor='let doctor of doctors'>
-			<img mat-card-image src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
-			<mat-card-header>
-				<mat-card-title>{{doctor.first_name}} {{doctor.last_name}}</mat-card-title>
-				<mat-card-subtitle>{{doctor.speciality}}</mat-card-subtitle>
-				<mat-card-subtitle>{{doctor.address}}</mat-card-subtitle>
-				<mat-card-subtitle>{{doctor.hospital_name}}</mat-card-subtitle>
-			</mat-card-header>
-			<mat-card-actions>
-				<button mat-button color="primary" class='font-bold'>Details</button>
-				<button mat-button color="accent" class='font-bold'>Book appointment</button>
-			</mat-card-actions>
-		</mat-card>
-</div>
+<main class="container">
+	<div class="my-10 flex flex-col lg:flex-row gap-8 lg:gap-16 my-20 mat-typography">
+		<div class="flex items-center justify-between gap-4 p-4 bg-violet-50 rounded-md">
+			<mat-icon fontIcon="searchoutlined" class="mat-ico text-6xl text-purple-800"></mat-icon>
+			<div>
+				<h2 class="text-purple-800 mat-h2 !mb-0">Find a doctor</h2>
+				<p class="mat-body-1 my-2">Find the closest health professional to your address</p>
+			</div>
+		</div>
+		<div class="flex items-center justify-between gap-4 p-4 bg-sky-50 rounded-md">
+			<mat-icon fontIcon="eventoutlined" class="mat-ico text-6xl text-sky-800"></mat-icon>
+			<div>
+				<h2 class="text-sky-800 mat-h2">Book appointments</h2>
+				<p class="mat-body-1">Take a convenient rendez-vous with your doctor</p>
+			</div>
+		</div>
+		<div class="flex items-center justify-between gap-4 p-4 bg-teal-50 rounded-md">
+			<mat-icon fontIcon="medical_information" class="mat-ico text-6xl text-teal-800"></mat-icon>
+			<div>
+				<h2 class="text-teal-800 mat-h2">Access Health</h2>
+				<p class="mat-body-1">Find the closest health professional to your address</p>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h2 class="relative z-100 text-5xl text-center leading-2 text-purple-900 lg:w-3/5 m-auto lg:-mb-24">
+			Making Medical Services Easily Accessible
+		</h2>
+		<div class="w-full lg:flex justify-between items-center gap-14 z-10">
+			<div class="flex-1">
+				<img src="assets/images/online-doctor-white-coat.jpg" alt="online doctor">
+			</div>
+			<div class="flex-1" >
+				<p class="text-gray-700 lg:text-lg leading-7  my-10">
+					Ipsum inventore corrupti quaerat provident totam fugiat cum, alias? Voluptatem molestiae iure beatae voluptas suscipit, nulla A eaque et ipsa tempore excepturi aperiam officiis odit Mollitia alias iste distinctio beatae
+					Sit rerum officiis laborum facere doloremque doloremque exercitationem blanditiis Praesentium odit repudiandae reprehenderit minus voluptatum Corrupti alias sed tempora ad sequi? Cumque rem dolore explicabo illo itaque maxime Odit ratione.
+				</p>
+				<div class="flex gap-8">
+					<div>
+						<small class="block text-gray-300 leading-1">Are you a medical <br>professional?</small>
+						<button mat-flat-button color="primary" class="register-button w-20! font-bold">
+							<a routerLink="/registration" type="button">Register</a>
+						</button>
+					</div>
+					<div>
+						<small class="block text-purple-500">Looking for a medical <br>professional?</small>
+						<button mat-stroked-button color="primary" class="register-button w-20! font-bold">Search</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf='doctors; else noDoctors' class='py-20'>
+			<mat-card *ngFor='let doctor of doctors'>
+				<img mat-card-image src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+				<mat-card-header>
+					<mat-card-title>{{doctor.first_name}} {{doctor.last_name}}</mat-card-title>
+					<mat-card-subtitle>{{doctor.speciality}}</mat-card-subtitle>
+					<mat-card-subtitle>{{doctor.address}}</mat-card-subtitle>
+					<mat-card-subtitle>{{doctor.hospital_name}}</mat-card-subtitle>
+				</mat-card-header>
+				<mat-card-actions>
+					<button mat-button color="primary" class='font-bold'>Details</button>
+					<button mat-button color="accent" class='font-bold'>Book appointment</button>
+				</mat-card-actions>
+			</mat-card>
+	</div>
+</main>
 <footer class='w-full h-[100px] bg-violet-100 flex justify-center items-center'>&copy; copyright 2023 – Doctor hub</footer>
 <ng-template #noDoctors>
 	<h3>No Listings to show</h3>
