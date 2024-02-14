@@ -8,6 +8,7 @@ interface DoctorType {
 	speciality: string
 	address: string
 	hospital_name: string
+	picture: string
 }
 @Component({
   selector: 'app-homepage',
@@ -17,12 +18,12 @@ interface DoctorType {
 export class HomepageComponent implements OnInit {
 	searchTerm = new FormControl<string>('')
 	doctors: DoctorType[] | null = null
-	
+
 	constructor(private dataservice: DataService){}
 	ngOnInit(){
 		this.dataservice.fetch('doctors').subscribe(data => {
 			this.doctors = data.results
 		})
 	}
-	
+
 }

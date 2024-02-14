@@ -31,11 +31,15 @@ export class FinalRegComponent implements OnInit {
 		this.authUser || this.router.navigate(['/'])
 	 }
 	submitFinal(){
-		console.log(this.finalForm.value)
 		const user_id = this.route.snapshot.paramMap.get('id')
-		if (user_id){
+		if (user_id) {
 			const res = this.register.completeProfile('doctor', user_id, this.finalForm.value)
-			if(res) res.subscribe(data => this.router.navigate(['account', user_id]))
+			if(res) {
+				res.subscribe(data => {
+					this.auth.authenticate(data['sessionToken'])
+					this.router.navigate(['account', user_id])
+				})
+			}
 		}
 	}
 }

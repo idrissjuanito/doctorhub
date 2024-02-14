@@ -3,6 +3,10 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
 const BASE_URL = 'http://localhost:6500'
+interface AuthResp {
+	sessionToken: string
+	user_id: string
+}
 
 @Injectable({providedIn: 'root'})
 export class RegisterService {
@@ -10,10 +14,6 @@ export class RegisterService {
 		private http: HttpClient,
 		private router: Router){}
 	registerInitial(resource: string, payload: object){
-		interface AuthResp {
-			sessionToken: string
-			user_id: string
-		}
 		const URL = BASE_URL+'/profile/'+resource
 		return this.http.post<AuthResp>(BASE_URL+'/profile/'+resource, payload)
 	}
@@ -21,10 +21,12 @@ export class RegisterService {
 		const URL = BASE_URL+'/profile/'+resource+'s'
 		const token = localStorage.getItem('sessionToken')
 		if (token == null) return null
-		const httpOptions = {headers: new HttpHeaders({
-			Authorization: 'Bearer '+JSON.parse(token || '')
-		}),
-		params: new HttpParams().set('id', user_id)}
-		return this.http.put<string>(URL, payload, httpOptions)
+		const httpOptions = {
+			headers: new HttpHeaders({
+				Authorization: 'Bearer '+JSON.parse(token)
+			}),
+			params: new HttpParams().set('id', user_id)
+		}
+		return this.http.put<AuthResp>(URL, payload, httpOptions)
 	}
 }
