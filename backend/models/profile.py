@@ -7,7 +7,7 @@ class Profile(DBManager):
     profile_id = 'uuid PRIMARY KEY'
     contact_one = 'varchar(15)'
     contact_two = 'varchar(15)'
-    picture = 'varchar(100)'
+    picture = 'varchar(255)'
     state = 'varchar(30) NOT NULL'
     city = 'varchar(30) NOT NULL'
     address = 'varchar(30) NOT NULL'

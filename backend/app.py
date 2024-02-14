@@ -8,8 +8,10 @@ from resources.appointments import Appointments
 from resources.listings import Listings
 from resources.auth import Auth
 from db import DBConnect
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ecafa3ebb8276627398b03c66ed15748'
+app.config["UPLOAD_FOLDER"] = "public/images"
 config = app.config
 list_bp = Blueprint('listings', __name__)
 profile_bp = Blueprint('profile', __name__)
@@ -19,10 +21,12 @@ api = Api(app)
 CORS(app, resources={r'/*': {"origins": "*"}})
 
 
-api.add_resource(Status, "/status")
 listing_api.add_resource(Listings, "/<string:entity>")
+
+api.add_resource(Status, "/status")
 api.add_resource(Appointments, "/appointments")
 api.add_resource(Auth, '/auth/login')
+
 profile_api.add_resource(DoctorResource, "/doctors")
 profile_api.add_resource(HospitalResource, "/hospitals")
 
