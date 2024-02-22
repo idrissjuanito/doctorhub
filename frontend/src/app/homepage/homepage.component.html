@@ -5,7 +5,7 @@
 			type="search"
 			placeholder="Search the doctors"
 			[formControl]="searchTerm">
-		<button mat-fab color="primary" class="w-5 h-5"><mat-icon>searchoutlined</mat-icon></button>
+		<button mat-fab color="primary" class="w-3 h-3"><mat-icon>searchoutlined</mat-icon></button>
 	</form>
 </div>
 <main class="container">
@@ -60,9 +60,9 @@
 			</div>
 		</div>
 	</div>
-	<div *ngIf='doctors; else noDoctors' class='py-20 flex gap-8'>
+	<div *ngIf='doctors; else noDoctors' class='py-20 flex gap-8 listings'>
 			<mat-card *ngFor='let doctor of doctors'>
-				<img mat-card-image src="{{doctor.picture}}" alt="">
+				<img mat-card-image src="{{doctor.picture || defaultImg}}" alt="">
 				<mat-card-header>
 					<mat-card-title>{{doctor.first_name}} {{doctor.last_name}}</mat-card-title>
 					<mat-card-subtitle><strong>{{doctor.speciality}}</strong>, {{doctor.hospital_name}}</mat-card-subtitle>
@@ -70,7 +70,9 @@
 				</mat-card-header>
 				<mat-card-actions>
 					<button mat-button color="primary" class='font-bold'>Details</button>
-					<button mat-button color="accent" class='font-bold'>Book appointment</button>
+					<button mat-button color="accent" class='font-bold'>
+						<a type="button" routerLink="/booking" [queryParams]="{ doctorId: doctor.doctor_id }"> Book </a>
+					</button>
 				</mat-card-actions>
 			</mat-card>
 	</div>

@@ -9,7 +9,6 @@ from models.person import Person
 class Doctor(Person):
     _tablename = 'doctor'
     doctor_id = 'uuid PRIMARY KEY'
-    person_id = relationship(Person, 'person_id')
     profile_id = relationship(Profile, 'profile_id')
     speciality = 'varchar(50) NOT NULL'
     license_num = 'varchar(100) NOT NULL UNIQUE'
@@ -26,7 +25,6 @@ class Doctor(Person):
                  hospital_id=None):
         self.doctor_id = str(uuid4())
         self.account_id = account_id
-        self.person_id = None
         self.profile_id = None
         self.speciality = speciality
         self.license_num = license_num

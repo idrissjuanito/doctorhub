@@ -14,17 +14,38 @@ body { margin: 0; font-family: fira sans, "Helvetica Neue", sans-serif; }
 	form {
 		@apply flex w-full max-w-[600px] sm:min-w-[500px] flex-col items-center justify-center bg-zinc-100 p-10;
 	}
-	button {
-		padding-inline: 20px;
-	}
 	mat-form-field {
 		@apply w-full max-w-[600px];
 	}
 	mat-card {
-		@apply max-w-96 pb-4;
+		@apply max-w-[900px] pb-4;
+	}
+	.listings mat-card {
+		@apply max-w-96 min-w-72
 	}
 	.mat-ico.mat-icon {
 		@apply w-20 h-20;
+	}
+	mat-button-toggle-group.mat-but-toggle.mat-button-toggle-group {
+		@apply grid auto-rows-auto grid-cols-3 md:grid-cols-4 !grid-flow-row
+	}
+	.mat-but-toggle mat-button-toggle {
+		@apply bg-violet-200 !text-slate-800 hover:bg-violet-300 rounded
+	}
+	mat-button-toggle-group.flex-col mat-button-toggle {
+		@apply !border-l-0
+	}
+	mat-button-toggle.mat-button-toggle-checked.mat-button-toggle {
+		@apply bg-violet-500 !text-[#ffffff]
+	}
+	form.searcher {
+		@apply bg-violet-50 w-full flex-row text-base p-2 self-center;
+	}
+	form.searcher input[type=search] {
+		@apply w-full placeholder:text-base !text-base bg-transparent pl-4 focus:outline-0 placeholder:text-zinc-400 text-gray-600;
+	}
+	form.searcher button {
+		@apply !p-2
 	}
 }
 
@@ -35,11 +56,5 @@ body { margin: 0; font-family: fira sans, "Helvetica Neue", sans-serif; }
 	}
 	.field-group {
 		@apply flex w-full gap-4;
-	}
-	form.searcher {
-		@apply bg-violet-100 w-full flex-row text-base p-2 self-center;
-	}
-	form.searcher input[type=search] {
-		@apply w-full placeholder:text-base !text-base bg-transparent pl-4 focus:outline-0 placeholder:text-zinc-400 text-gray-600;
 	}
 }

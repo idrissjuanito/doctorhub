@@ -28,7 +28,7 @@ def authenticator(func):
             payload = jwt.decode(token, config['SECRET_KEY'], algorithms='HS256')
             Account.find(fields='account_id', filter_values=(payload['account_id'],))
             user = Account.fetch()
-            return func(*args, payload)
+            return func(*args, payload, **kwargs)
         except DecodeError or InvalidTokenError:
             abort(401, message='unauthorized request')
     return wrapper
@@ -53,23 +53,25 @@ class Auth(Resource):
         account = Account.fetch()
         if account is None:
             return abort(404, message="No user found")
+        account_type = account['acc_type']
         pw = account['password'].encode('utf-8')
         if bcrypt.checkpw(args['password'].encode('utf-8'), pw):
-            user_model = self.account_types[account['acc_type']]
+            user_model = self.account_types[account_type]
             user_model.find(
-                    fields=f'{account["acc_type"]}_id, profile_id',
+                    fields=f'{account_type}_id, profile_id',
                     filters='account_id',
                     filter_values=(account['account_id'],))
             user = user_model.fetch()
-            user_id = user[f'{account["acc_type"]}_id']
+            user_id = user[f'{account_type}_id']
             payload = {
                 'user_id': user_id,
                 'profile_id': user['profile_id'],
                 'account_id': account['account_id'],
-                'email': account['email']
+                'email': account['email'],
+                'account_type': account_type
             }
             token = generate_jwt(payload)
-            return {'sessionToken': token, 'user_id': user_id}
+            return {'sessionToken': token, 'user_id': user_id, account_type: account_type}
         return 'Not Good'
 
     @staticmethod

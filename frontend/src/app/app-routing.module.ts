@@ -5,10 +5,12 @@ import { AppComponent } from './app.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { AccountComponent } from './account/account.component';
 import { LoginComponent } from './login/login.component';
+import { BookingComponent } from './appointment/booking.component';
 
 const routes: Routes = [
 	{path: '', component: HomepageComponent},
 	{path: 'login', component: LoginComponent},
+	{path: 'booking', component: BookingComponent},
 	{path: 'account', component: AccountComponent, children: [
 		{path: ':user_id', component: AccountComponent}
 	]}

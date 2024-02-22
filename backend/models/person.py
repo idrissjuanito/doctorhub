@@ -11,10 +11,11 @@ class Person(DBManager):
     gender = 'varchar(10) NOT NULL'
 
     def __init__(self,
+                 id: str,
                  first_name: str,
                  last_name: str,
                  gender: str):
-        self.person_id = str(uuid4())
+        self.person_id = id
         self.first_name = first_name
         self.last_name = last_name
         self.gender = gender

@@ -16,14 +16,26 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list'
 import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle'
+import { AccountFormComponent } from './components/account-form/account-form.component';
+import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
+import { BookingComponent } from './appointment/booking.component';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
+import { ConfirmBookingComponent } from './components/dialogs/confirm-booking/confirm-dialog-component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
     AccountComponent,
-    LoginComponent
+    LoginComponent,
+	BookingComponent,
+	AccountFormComponent,
+	PersonalDetailsFormComponent,
+	ConfirmBookingComponent,
   ],
   imports: [
 	ReactiveFormsModule,
@@ -35,6 +47,10 @@ import { MatIconModule } from '@angular/material/icon'
 	MatGridListModule,
 	MatToolbarModule,
     MatIconModule,
+	MatDatepickerModule,
+	MatNativeDateModule,
+	MatButtonToggleModule,
+	MatDialogModule,
     BrowserModule,
     BrowserAnimationsModule,
 	HttpClientModule,
@@ -45,4 +61,4 @@ import { MatIconModule } from '@angular/material/icon'
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {}

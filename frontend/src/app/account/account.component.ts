@@ -7,11 +7,12 @@ import { AuthService } from 'src/services/auth.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: []
 })
 export class AccountComponent implements OnInit {
 	loading: boolean = false
 	authUser: string | null = null
+	userType: string | undefined
 	settingForm = new FormGroup({
 		email: new FormControl(''),
 		password: new FormControl()
@@ -21,7 +22,11 @@ export class AccountComponent implements OnInit {
 			   private route: ActivatedRoute,
 			   private account: AccountService){}
 	ngOnInit(){
-		this.authUser = this.auth.isAuthenticated()
+		const user_info = this.auth.isAuthenticated()
+		if(user_info) {
+			this.authUser = user_info["user_id"]
+			this.userType = user_info["account_type"]
+		}
 		!this.authUser ? this.router.navigate(['/'])
 			: this.router.navigate([this.authUser], {relativeTo: this.route})
 	}

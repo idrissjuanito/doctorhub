@@ -1,0 +1,59 @@
+<div class="container py-12 flex flex-col items-center gap-12">
+	<mat-card *ngIf="doctor" class="md:!flex-row gap-4 justify-between overflow-hidden pb-0">
+		<img src="{{doctor.picture}}" alt="Photo of a Shiba Inu" class="md:w-2/5 object-cover">
+		<div class="flex flex-col gap-3 justify-center">
+			<mat-card-header>
+				<mat-card-title class="!leading-none">{{doctor.first_name}} {{doctor.last_name}}</mat-card-title>
+				<mat-card-subtitle class="!text-violet-600 !leading-none !inline">{{doctor.speciality}}</mat-card-subtitle>
+				<mat-card-subtitle class="!inline !leading-none"> – {{doctor.hospital_name}}</mat-card-subtitle>
+				<mat-card-subtitle class="!leading-none">{{doctor.city}}, {{doctor.address}}</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content class="mb-0">
+				<p>Amet possimus alias cum eos recusandae. Neque atque placeat voluptatibus esse maiores Cumque voluptates non dicta atque illum aliquid. Quae dolor voluptas quibusdam numquam unde Iusto officiis vitae dignissimos incidunt!</p>
+			</mat-card-content>
+		</div>
+	</mat-card>
+	<mat-card class="w-full lg:!flex-row justify-between p-6 gap-6">
+		<div class="lg:w-2/5">
+			<h3 class="mat-h3 font-bold">Pick a date</h3>
+			<mat-calendar class="w-full" [(selected)]="selected"></mat-calendar>
+		</div>
+		<div class="lg:w-3/5 flex flex-col justify-between">
+			<h3 class="mat-h3 font-bold">
+				Pick a time for
+				<span class="text-violet-600">{{selected | date : "mediumDate"}} Time {{time.value}}</span>
+			</h3>
+			<div class="bg-slate-100 rounded-md h-3/4 p-5">
+				<mat-button-toggle-group
+					*ngIf="slots.length"
+					[formControl]="time"
+					appearance="legacy"
+					class="mat-but-toggle !shadow-none gap-4">
+					<mat-button-toggle *ngFor="let slot of slots" mat-grid-tile [value]=slot>{{slot}}:00</mat-button-toggle>
+				</mat-button-toggle-group>
+			</div>
+		</div>
+	</mat-card>
+	<div class="lg:flex w-full max-w-[950px] justify-between p-6 gap-6">
+		<div class="lg:w-2/5">
+			<h3 class="mat-h3 font-bold">Reason for appointment</h3>
+			<mat-button-toggle-group class="!flex-col w-full divide-y" [formControl]="reason">
+				<mat-button-toggle value="consultation">Consultation</mat-button-toggle>
+				<mat-button-toggle value="Followup">Follow up</mat-button-toggle>
+				<mat-button-toggle value="procedure">Procedure</mat-button-toggle>
+			</mat-button-toggle-group>
+		</div>
+		<div class="lg:w-3/5 flex flex-col justify-between">
+			<h3 class="mat-h3 font-bold"> Additional Notes </h3>
+			<textarea
+				id="notes"
+				name="notes"
+				cols="30"
+				rows="6"
+				class="bg-slate-100 rounded-md focus:ring-0 focus:border-0 p-2"
+				[formControl]="notes"
+				placeholder="What to share more?"></textarea>
+		</div>
+	</div>
+	<button mat-flat-button class="!px-8" color="primary" (click)="processBooking()"> Proceed </button>
+</div>

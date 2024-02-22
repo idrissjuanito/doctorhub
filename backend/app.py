@@ -2,8 +2,7 @@ from flask import Blueprint, Flask
 from flask_restful import Api
 from flask_cors import CORS
 from resources.status import Status
-from resources.profile import HospitalResource
-from resources.profile import DoctorResource
+from resources.profile import Profiles
 from resources.appointments import Appointments
 from resources.listings import Listings
 from resources.auth import Auth
@@ -27,8 +26,7 @@ api.add_resource(Status, "/status")
 api.add_resource(Appointments, "/appointments")
 api.add_resource(Auth, '/auth/login')
 
-profile_api.add_resource(DoctorResource, "/doctors")
-profile_api.add_resource(HospitalResource, "/hospitals")
+profile_api.add_resource(Profiles, "/<string:entity>")
 
 app.register_blueprint(list_bp, url_prefix='/listings')
 app.register_blueprint(profile_bp, url_prefix='/profile')

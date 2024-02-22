@@ -10,13 +10,15 @@ class Account(DBManager):
     account_id = 'uuid PRIMARY KEY'
     email = 'varchar(100) NOT NULL'
     password = 'varchar(150) NOT NULL'
-    acc_type = 'varchar(20)'
+    account_type = 'varchar(20)'
+    verified = 'boolean DEFAULT false'
 
     def __init__(self,
                  email: str,
                  password: str,
-                 acc_type='patient'):
+                 account_type='patient'):
         self.account_id = str(uuid4())
         self.email = email
         self.password = password
-        self.acc_type = acc_type
+        self.account_type = account_type
+        self.verified = False

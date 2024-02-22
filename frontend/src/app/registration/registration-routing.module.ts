@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProfileComponent } from './components/profile/profile.component';
-import { ChoiceComponent } from './components/choice/choice.component';
 import { RegistrationComponent } from './registration.component';
-import { FinalRegComponent } from './components/final-reg/final-reg.component';
+import { PersonalDetailsFormComponent } from '../components/personal-details-form/personal-details-form.component';
+import { AccountFormComponent } from '../components/account-form/account-form.component';
 
 const regRoutes: Routes = [
 	{path: 'registration', component: RegistrationComponent,
 	children: [
-		{path: '', component: ChoiceComponent},
-		{path: ':type', component: ProfileComponent},
-		{path: ':type/:id', component: FinalRegComponent}
+		{ path: ':type', component: AccountFormComponent },
+		{ path: ':type/:id', component: PersonalDetailsFormComponent }
 	]},
 ];
 

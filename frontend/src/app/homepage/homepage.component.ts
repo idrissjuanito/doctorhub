@@ -1,29 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { DoctorType } from 'src/models/app-models';
+import { AuthService } from 'src/services/auth.service';
 import { DataService } from 'src/services/data.service';
 
-interface DoctorType {
-	first_name: string
-	last_name: string
-	speciality: string
-	address: string
-	hospital_name: string
-	picture: string
-}
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.css']
+  styleUrls: []
 })
 export class HomepageComponent implements OnInit {
 	searchTerm = new FormControl<string>('')
 	doctors: DoctorType[] | null = null
+	user: string | null = null
+	defaultImg = "https://firebasestorage.googleapis.com/v0/b/doctohub-32c6e.appspot.com/o/Square%20Placeholder%20Image.jpg?alt=media"
 
-	constructor(private dataservice: DataService){}
+	constructor(private dataservice: DataService, private auth: AuthService){}
 	ngOnInit(){
-		this.dataservice.fetch('doctors').subscribe(data => {
+		this.dataservice.fetch<{results: DoctorType[]}>('doctors').subscribe(data => {
 			this.doctors = data.results
 		})
+		const user_info = this.auth.isAuthenticated()
+		user_info && (this.user = user_info["user_id"])
 	}
 
 }
