@@ -1,5 +1,3 @@
-from models.account import Account
-from models.profile import Profile
 from db.dbmanager import DBManager, relationship
 from uuid import uuid4
 

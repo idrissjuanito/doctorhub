@@ -4,7 +4,7 @@ from models.appointment import Appointment
 
 postparser = reqparse.RequestParser()
 postparser.add_argument(
-        'guest_id',
+        'patient_id',
         type=str,
         help="Provide a guest id",
         required=True)
@@ -16,10 +16,16 @@ postparser.add_argument(
         'hospital_id',
         type=str,
         help="Provide a hospital id")
+postparser.add_argument(
+        'datetime',
+        type=str,
+        help="Missing Datetime",
+        required=True)
 postparser.add_argument('reason',
                         type=str,
                         help="provide a reason",
                         required=True)
+postparser.add_argument('notes', type=str)
 
 getparser = reqparse.RequestParser()
 getparser.add_argument('doctor_id', type=str)
@@ -29,10 +35,8 @@ getparser.add_argument('guest_id', type=str)
 class Appointments(Resource):
     def post(self):
         args = postparser.parse_args()
-        date = datetime.isoformat(datetime.now())
-        args['date'] = date
         ap = Appointment(**args)
-        Appointment.insert_record(ap.__dict__)
+        Appointment.insert_record(ap)
         Appointment.save()
         return "new appointment created"
 

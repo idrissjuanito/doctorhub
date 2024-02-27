@@ -5,7 +5,6 @@ import { Router } from "@angular/router";
 const BASE_URL = 'http://localhost:6500'
 interface AuthResp {
 	sessionToken: string
-	user_id: string
 }
 
 @Injectable({providedIn: 'root'})
@@ -23,7 +22,7 @@ export class RegisterService {
 		if (token == null) return null
 		const httpOptions = {
 			headers: new HttpHeaders({
-				Authorization: 'Bearer '+JSON.parse(token)
+				Authorization: 'Bearer '+token
 			}),
 			params: new HttpParams().set('id', user_id)
 		}

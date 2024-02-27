@@ -1,0 +1,23 @@
+<div mat-dialog-content class="bg-zinc-100 max-w-[650px] !py-10 sm:!px-10">
+	<div *ngIf="loginForm" >
+		<h2 mat-dialog-title class="text-center leading-0 !py-0"> Sign in to book appointment </h2>
+		<p class="text-center leading-0 py-0"> Not yet registered?
+			<button class="inline font-bold text-blue-500" (click)="switchForm()">
+				Register
+			</button>
+		</p>
+		<login-form *ngIf="loginForm" (loginEvent)="closeDialog($event)"></login-form>
+	</div>
+	<div *ngIf="signupForm" class="flex flex-col items-center">
+		<h2 mat-dialog-title class="text-center !p-0 1leading-0"> Create an account </h2>
+		<p class="text-center mb-8"> Already have an account?
+			<button class="inline font-bold text-violet-500" (click)="switchForm()">
+				Login
+			</button>
+		</p>
+		<h2 class="mt-8">Account Details</h2>
+		<account-details-form (accountFormGroupEvent)="setAccountFormGroup($event)"></account-details-form>
+		<button mat-flat-button color="primary" align="middle" (click)="createPatientAccount()"> Create account </button>
+	</div>
+	<personal-details-form *ngIf="personalDetailsForm"></personal-details-form>
+</div>

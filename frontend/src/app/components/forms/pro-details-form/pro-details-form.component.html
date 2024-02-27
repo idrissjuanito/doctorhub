@@ -1,0 +1,42 @@
+<form (ngSubmit)="submitProAccountDetails()">
+	<h2 class="self-start">Professional Details</h2>
+	<div [formGroup]="doctorForm" *ngIf="entity == 'doctor'">
+		<mat-form-field>
+			<mat-label>Speciality</mat-label>
+			<input matInput
+				   placeholder="Ex. Cardiologist"
+				   formControlName="speciality" required>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>License number</mat-label>
+			<input matInput
+				   placeholder="Ex. 000000.00000 0000"
+				   formControlName="license_num">
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>Hospital Name</mat-label>
+			<input matInput
+				   placeholder="Ex. Regional Hospital Douala"
+				   formControlName="hospital_name">
+		</mat-form-field>
+	</div>
+	<div [formGroup]="hospitalForm" *ngIf="entity == 'hospital'" class="w-full">
+		<mat-form-field>
+			<mat-label>Name of clinic/hospital</mat-label>
+			<input matInput
+				   placeholder="Ex. Regional hospital Douala"
+				   formControlName="name">
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>Hospital registration number</mat-label>
+			<input matInput
+				   placeholder="Ex. Registration number"
+				   formControlName="reg_number">
+		</mat-form-field>
+	</div>
+	<div class="mt-8">
+		<h2>Account details</h2>
+		<account-details-form (accountFormGroupEvent)="accountFormGroupInit($event)"></account-details-form>
+	</div>
+	<button mat-flat-button type="button" color="primary" class="self-start" (click)="submitProAccountDetails()"> Proceed </button>
+</form>

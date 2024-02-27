@@ -20,11 +20,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle'
-import { AccountFormComponent } from './components/account-form/account-form.component';
-import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
 import { BookingComponent } from './appointment/booking.component';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
 import { ConfirmBookingComponent } from './components/dialogs/confirm-booking/confirm-dialog-component';
+import { CreateAccountComponent } from './components/dialogs/create-account/create-account.component';
+import { PersonalDetailsFormComponent } from './components/forms/personal-details-form/personal-details-form.component';
+import { ProDetailsFormComponent } from './components/forms/pro-details-form/pro-details-form.component';
+import { AccountDetailsFormComponent } from './components/forms/account-details-form/account-details-form.component';
+import { LoginFormComponent } from './components/forms/login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -33,9 +36,12 @@ import { ConfirmBookingComponent } from './components/dialogs/confirm-booking/co
     AccountComponent,
     LoginComponent,
 	BookingComponent,
-	AccountFormComponent,
 	PersonalDetailsFormComponent,
 	ConfirmBookingComponent,
+ 	CreateAccountComponent,
+  	ProDetailsFormComponent,
+	AccountDetailsFormComponent,
+ 	LoginFormComponent
   ],
   imports: [
 	ReactiveFormsModule,
@@ -57,7 +63,9 @@ import { ConfirmBookingComponent } from './components/dialogs/confirm-booking/co
 	RegistrationModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+	  {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { maxWidth: "95vw", width: 500 }}
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

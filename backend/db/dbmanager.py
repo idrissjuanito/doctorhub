@@ -9,6 +9,7 @@ class DBManager(ABC):
     _tablename = None
     __queries = []
     __fetch_queries = []
+    __joins = []
 
     @classmethod
     def get_attr(cls):
@@ -45,6 +46,7 @@ class DBManager(ABC):
             session.commit()
             DBManager.__queries.clear()
         except Exception as e:
+            cls.__queries.clear()
             abort(500, message=e)
 
     @classmethod
@@ -52,6 +54,7 @@ class DBManager(ABC):
         tbl = cls._tablename
         base = f"SELECT {fields} FROM {tbl}"
         DBManager.__fetch_queries.clear()
+        DBManager.__joins.clear()
         DBManager.__fetch_queries.append(base)
         if filter_values and filters is None:
             filters = f'{tbl}_id'
@@ -65,7 +68,7 @@ class DBManager(ABC):
 
     @staticmethod
     def parse_filters(filters):
-        filter_string = ' WHERE '
+        filter_string = 'WHERE '
         if type(filters) is not list:
             filter_string += f'{filters} = %s'
             return filter_string
@@ -80,12 +83,11 @@ class DBManager(ABC):
 
     @classmethod
     def fetch(cls, limit=""):
-        sql = "".join(DBManager.__fetch_queries[:-1])
+        cls.__fetch_queries.insert(1, " ".join(cls.__joins))
+        sql = " ".join(DBManager.__fetch_queries[:-1])
         prepared_values = DBManager.__fetch_queries[-1]
-        print(prepared_values)
         session = DBConnect()
         cursor = session.get_cursor()
-        print(sql)
         results = None
         try:
             if limit == "all":
@@ -100,14 +102,20 @@ class DBManager(ABC):
                 results = cursor.fetchone()
             return results
         except Exception as e:
+            print(sql)
+            print(prepared_values)
+            print(e)
             abort(500, message="Server Error: Something went wrong")
 
+
     @classmethod
-    def join(cls, join, table, on=None):
-        if on is None:
-            main_table = f'{cls.__name__.lower()}'
-            on = f'{main_table}.{table}_id = {table}.{table}_id'
-        DBManager.__fetch_queries.insert(1, f" {join} JOIN {table} ON {on}")
+    def join(cls, join, r_table, l_table=None):
+        right_cmp = f'{r_table}.{r_table}_id'
+        main_table = f'{cls.__name__.lower()}'
+        left_cmp = f'{main_table}.{r_table}_id'
+        if l_table is not None:
+            left_cmp = f'{l_table}.{r_table}_id'
+        DBManager.__joins.append(f"{join} JOIN {r_table} ON {left_cmp} = {right_cmp}")
         return cls
 
     @classmethod
@@ -138,7 +146,7 @@ class DBManager(ABC):
             abort(500, message=e)
 
 
-def relationship(cls, key: str):
+def relationship(cls, action = 'NO ACTION'):
     cls.create_table()
-    key_type = cls.__dict__[key].split()[0]
-    return f'{key_type} REFERENCES {cls._tablename}({key})'
+    key_type = cls.__dict__[cls._tablename+'_id'].split()[0]
+    return f'{key_type} REFERENCES {cls._tablename} ON DELETE {action}'

@@ -1,0 +1,24 @@
+<div class="w-full max-w-[500px] bg-zinc-100" [formGroup]="accountForm">
+	<mat-form-field>
+		<mat-label>Email Address</mat-label>
+		<input
+				matInput
+				type="email"
+				placeholder="Ex. drjohndoe@gmail.com"
+				formControlName="email" required>
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Password</mat-label>
+		<input matInput
+			   type="password"
+			   placeholder="********"
+			   formControlName="password" required>
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label> Confirm password </mat-label>
+		<input matInput
+			   type="password"
+			   placeholder="********"
+			   formControlName="confirmPassword" required>
+	</mat-form-field>
+</div>

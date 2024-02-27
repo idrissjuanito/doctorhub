@@ -1,21 +1,5 @@
-<section class="w-full container py-10 flex flex-col items-center">
-	<form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-		<h2 class="self-start">Account/Login</h2>
-		<mat-form-field>
-			<mat-label>Email Address</mat-label>
-			<input
-					matInput
-					type="email"
-					placeholder="Ex. drjohndoe@gmail.com"
-					formControlName="email" required>
-		</mat-form-field>
-		<mat-form-field>
-			<mat-label>Password</mat-label>
-			<input matInput
-				   type="password"
-				   placeholder="********"
-				   formControlName="password" required>
-		</mat-form-field>
-		<button mat-flat-button type="submit" color="primary" class="self-start"> Proceed </button>
-	</form>
+<section class="flex items-center justify-center h-screen px-3">
+	<div class="lg:p-12 bg-zinc-100 w-full max-w-[500px] p-8">
+		<login-form></login-form>
+	</div>
 </section>

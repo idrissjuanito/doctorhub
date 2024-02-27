@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DoctorType, UserJWTInfo } from 'src/models/app-models';
+import { BookingModel, DoctorType, IPatient, IUserProfile, UserJWTInfo } from 'src/models/app-models';
 import { AuthService } from 'src/services/auth.service';
 import { BookingService } from 'src/services/booking-service';
 import { DataService } from 'src/services/data.service';
 import { ConfirmBookingComponent } from '../components/dialogs/confirm-booking/confirm-dialog-component';
+import { LoginComponent } from '../login/login.component';
+import { CreateAccountComponent } from '../components/dialogs/create-account/create-account.component';
 
 @Component({
   selector: 'app-booking',
@@ -15,7 +17,7 @@ import { ConfirmBookingComponent } from '../components/dialogs/confirm-booking/c
 })
 export class BookingComponent implements OnInit {
 	doctorId: string | undefined
-	doctor: DoctorType | undefined
+	doctor!: DoctorType
 	selected: Date = new Date()
 	time = new FormControl(0)
 	reason = new FormControl('')
@@ -39,8 +41,14 @@ export class BookingComponent implements OnInit {
 		const res = this.dataservice.fetch<{results: DoctorType}>("doctors", this.doctorId)
 		res.subscribe(data => this.doctor = data["results"])
 		this.getAvailableSlots()
+		// this.dialog.open(CreateAccountComponent, {
+		// 	maxWidth: "95vw"
+		// })
 	}
 
+	ngOnChanges() {
+		console.log("something changed")
+	}
 	getAvailableSlots() {
 		const start = this.doctorSchedule.checkinTime
 		const stop = this.doctorSchedule.checkoutTime
@@ -54,16 +62,24 @@ export class BookingComponent implements OnInit {
 	processBooking() {
 		if(!this.time.value) return
 		const datetime = this.selected.setUTCHours(this.time.value, 0, 0)
-		const bookingData = {
+		const bookingData: BookingModel = {
 			datetime: new Date(datetime).toISOString(),
-			reason: this.reason.value,
-			notes: this.notes.value,
-			doctor: this.doctorId
+			reason: this.reason.value || "",
+			notes: this.notes.value || "",
+			doctor: this.doctor
 		}
-		const userData: UserJWTInfo | null = this.auth.isAuthenticated()
-		if(userData) {
-			this.dialog.open(ConfirmBookingComponent, {data: { bookingData: bookingData, userData}})
+		const authUser: UserJWTInfo | null = this.auth.isAuthenticated()
+		if(authUser) {
+			const request = this.auth.getUserProfile<IPatient>(authUser["account_type"])
+			request.subscribe(profile => {
+				const patient = profile["results"]
+				patient["email"] = authUser["email"]
+				bookingData["patient"] = patient
+			})
+			this.dialog.open(ConfirmBookingComponent, {data: bookingData})
 			return
 		}
+		localStorage.setItem("tempBookingData", JSON.stringify(bookingData))
+		this.dialog.open(CreateAccountComponent)
 	}
 }

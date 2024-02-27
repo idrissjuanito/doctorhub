@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtPayload, jwtDecode } from "jwt-decode";
@@ -14,7 +14,7 @@ export class AuthService {
 		const token = localStorage.getItem('sessionToken')
 		if (token == null) return null
 		try {
-			const user_info = jwtDecode<UserJWTInfo>(JSON.parse(token))
+			const user_info = jwtDecode<UserJWTInfo>(token)
 			if (Date.now() > (user_info.exp || 0)) {
 				console.log(user_info)
 				localStorage.removeItem('sessionToken')
@@ -27,8 +27,9 @@ export class AuthService {
 			return null
 		}
 	}
-	authenticate (token: string) {
-		localStorage.setItem('sessionToken', JSON.stringify(token))
+	authenticate (token: string): UserJWTInfo | null {
+		localStorage.setItem('sessionToken', token)
+		return this.isAuthenticated()
 	}
 	login(logins: object) {
 		return this.http.post<{user_id: string, sessionToken: string}>(BASE_URL+'/auth/login', logins)
@@ -36,5 +37,15 @@ export class AuthService {
 	logout () {
 		localStorage.removeItem('sessionToken')
 		this.router.navigate(['/'])
+	}
+	getUserProfile<T>(type: string) {
+		const token = localStorage.getItem('sessionToken')
+		const URL = BASE_URL+"/profile/"+type+"s"
+		const httpOptions = {
+			headers: new HttpHeaders({
+				Authorization: 'Bearer '+token
+			}),
+		}
+		return this.http.get<{results: T}>(URL, httpOptions)
 	}
 }

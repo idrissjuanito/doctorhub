@@ -1,4 +1,5 @@
 from uuid import uuid4
+from db.dbmanager import relationship
 from db.dbmanager import DBManager
 
 
@@ -10,7 +11,7 @@ class Account(DBManager):
     account_id = 'uuid PRIMARY KEY'
     email = 'varchar(100) NOT NULL'
     password = 'varchar(150) NOT NULL'
-    account_type = 'varchar(20)'
+    account_type = 'varchar(20) NOT NULL'
     verified = 'boolean DEFAULT false'
 
     def __init__(self,

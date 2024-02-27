@@ -1,14 +1,14 @@
-from common.utils import generate_jwt, update_profile_image
-from flask_cors import decorator
-from flask_restful import Resource, abort, reqparse, request
+from common.utils import generate_jwt, parse_resource_fields, update_profile_image
+import bcrypt
+from flask_restful import Resource, abort, fields, marshal, reqparse, request
 from models.person import Person
 from models.account import Account
 from models.doctor import Doctor
+from models.patient import Patient
 from models.hospital import Hospital
 from models.profile import Profile
 from resources.auth import authenticator
 import os
-import bcrypt
 
 
 parser = reqparse.RequestParser()
@@ -34,53 +34,72 @@ hospital_parser.add_argument('reg_number',
                              type=str,
                              required=True,
                              help='Missing registration number')
-hospital_parser.add_argument('name',
-                             type=str,
-                             required=True,
-                             help='Missing hospital name')
+hospital_parser.add_argument('name', type=str, required=True, help='Missing hospital name')
+patient_parser = reqparse.RequestParser()
 
 
 class Profiles(Resource):
-    method_decorators = {'put': [authenticator], 'patch': [authenticator]}
-    arg_parsers = {'doctor_parser': doctor_parser, "hospital_parser": hospital_parser}
+    method_decorators = {'put': [authenticator],
+                         'patch': [authenticator],
+                         'get': [authenticator]}
+    arg_parsers = {
+            'doctor_parser': doctor_parser,
+            'hospital_parser': hospital_parser,
+            'patient_parser': patient_parser }
     models = {
             'doctor': Doctor,
             'hospital': Hospital,
             'person': Person,
             'profile': Profile,
+            'patient': Patient,
             'account': Account}
 
     def post(self, entity):
         '''
         handles request for creating new entity record
         '''
-        args = self.arg_parsers[f"{entity[:-1]}_parser"].parse_args()
-        account = self.new_account('doctor')
-        cls = self.models[entity[:-1]]
-        obj = cls(**args, account_id=account['account_id'])
+        tablename = entity[:-1]
+        args = self.arg_parsers[f"{tablename}_parser"].parse_args()
+        account = self.new_account(tablename)
+        cls = self.models[tablename]
+        obj = cls(**args)
         cls.insert_record(obj)
         Profile.save()
-        payload = {**account, 'user_id': getattr(obj, f"{entity[:-1]}_id")}
+        payload = {**account, 'user_id': getattr(obj, f"{tablename}_id")}
         token = generate_jwt(payload)
-        return {'sessionToken': token, 'user_id': payload["user_id"]}
+        return { 'sessionToken': token }
 
     def put(self, user_info, entity):
         '''
         handles requests to complete existing entity with personal data
         '''
-        profile_id = self.profile_updates() # creates a assiociated profile record
-        person_id = self.new_person(user_info['user_id'])
-        if entity == "hospitals":
-            Hospital.update_records(user_info["user_id"], {'profile_id': profile_id})
-        else:
-            updates = {'profile_id': profile_id, 'person_id': person_id}
-            self.models[entity[:-1]].update_records(user_info['user_id'], updates) # update doctor table with associated profile and person ids
-        Profile.save()
+        person_id = None
+        if entity != 'hospitals':
+            person_id = self.new_person(user_info['user_id'])
+        profile_id = self.profile_updates(person_id, user_info['account_id']) # creates a assiociated profile record
+        print(entity)
+        cls = self.models[entity[:-1]]
+        cls.update_records(user_info['user_id'], {'profile_id': profile_id})
+        cls.save()
         user_info['profile_id'] = profile_id
         token = generate_jwt(user_info)
         return {'sessionToken': token, 'user_id': user_info['user_id']}
 
-    def patch(self, entity, user_info):
+    def get(self, user_info, entity):
+        """
+        gets full profile info for authenticated user
+        """
+        cls = self.models[entity[:-1]]
+        finder = cls.find(filter_values=(user_info["user_id"],))
+        finder.join("INNER", "profile")
+        if entity != "hospitals":
+            finder.join("INNER", "person", "profile")
+        res = Profile.fetch()
+        resp_fields = {}
+        resp_fields["results"] = parse_resource_fields(entity)
+        return marshal({'results': res}, resp_fields)
+
+    def patch(self, user_info, entity):
         '''
         payload: {user_id: string, account_id: string}
             jwt token payload passed by authenticator decorator
@@ -109,7 +128,7 @@ class Profiles(Resource):
         hashed_pw = bcrypt.hashpw(args['password'].encode('utf-8'), salt)
         a = Account(args['email'], hashed_pw.decode('utf-8'), account_type=account_type)
         Account.insert_record(a)
-        return {'account_id': a.account_id, 'email': a.email}
+        return {'account_id': a.account_id, 'email': a.email, 'account_type': account_type}
 
     def new_person(self, user_id):
         doc_args = ['first_name', 'last_name', 'gender']
@@ -119,9 +138,10 @@ class Profiles(Resource):
         args = person_parser.parse_args()
         p = Person(user_id, **args)
         Person.insert_record(p)
+        Person.save()
         return p.person_id
 
-    def profile_updates(self):
+    def profile_updates(self, person_id, account_id):
         '''
         creates a new profile with field data provided with request body
         body payload is extracted as profile_args, parsed and used for new
@@ -138,6 +158,7 @@ class Profiles(Resource):
                                       required=required,
                                       help=f'Missing {arg}')
         args = profile_args.parse_args()
-        prf = Profile(*[args[arg] for arg in expected_args])
+        prf = Profile(**args, person_id=person_id, account_id=account_id)
         Profile.insert_record(prf)
+        Profile.save()
         return prf.profile_id

@@ -1,12 +1,35 @@
-<h1 mat-dialog-title> this is it yoo </h1>
-<div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Favorite Animal</mat-label>
-    <input matInput>
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button cdkFocusInitial>Ok</button>
+<div class="max-w-[650px] !py-8 px-5 sm:px-10">
+	<h2> Booking confirmation </h2>
+	<small class="text-slate-400"> Verify and confirm appointment details </small>
+	<div class="!flex !flex-row gap-8 my-8">
+		<div>
+			<ul class="booking-fields flex flex-col gap-3">
+				<li>Doctor</li>
+				<li>Location</li>
+				<li>Duration</li>
+				<li>Date and Time</li>
+				<li>Your  name</li>
+				<li>Your Email</li>
+				<li>Your Contact</li>
+			</ul>
+		</div>
+		<div>
+			<ul class="flex flex-col gap-3">
+				<li>
+					{{data.doctor.first_name}} {{data.doctor.last_name}},
+					<span class="text-violet-600">{{ data.doctor.speciality }}</span>
+				</li>
+				<li>{{data.doctor.address}}, {{data.doctor.city}}</li>
+				<li>60 mins</li>
+				<li>{{ data.datetime | date }}</li>
+				<li> {{ data.patient?.first_name }} {{ data.patient?.last_name }}</li>
+				<li> {{ data.patient?.email }} </li>
+				<li> {{ data.patient?.contact_one }} </li>
+			</ul>
+		</div>
+	</div>
+	<div mat-dialog-actions align="end">
+	  <button mat-button (click)="onNoClick()">Cancel</button>
+	  <button mat-flat-button cdkFocusInitial color="primary" (click)="confirmAppointment()">Confirm</button>
+	</div>
 </div>
