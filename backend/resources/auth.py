@@ -78,7 +78,7 @@ class Auth(Resource):
             }
             token = generate_jwt(payload)
             return { 'sessionToken': token }
-        return 'Not Good'
+        abort(401, message="unauthorized")
 
     @staticmethod
     def validate_logins(logins: dict):
