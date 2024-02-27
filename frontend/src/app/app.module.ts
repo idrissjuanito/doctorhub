@@ -7,7 +7,6 @@ import { RegistrationModule } from './registration/registration.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { HomepageComponent } from './homepage/homepage.component';
-import { AccountComponent } from './account/account.component';
 import { LoginComponent } from './login/login.component'
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,12 +27,12 @@ import { PersonalDetailsFormComponent } from './components/forms/personal-detail
 import { ProDetailsFormComponent } from './components/forms/pro-details-form/pro-details-form.component';
 import { AccountDetailsFormComponent } from './components/forms/account-details-form/account-details-form.component';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
+import { AccountModule } from './account/account.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    AccountComponent,
     LoginComponent,
 	BookingComponent,
 	PersonalDetailsFormComponent,
@@ -61,6 +60,7 @@ import { LoginFormComponent } from './components/forms/login-form/login-form.com
     BrowserAnimationsModule,
 	HttpClientModule,
 	RegistrationModule,
+	AccountModule,
     AppRoutingModule
   ],
   providers: [

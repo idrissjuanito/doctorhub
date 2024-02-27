@@ -39,7 +39,7 @@ export class LoginFormComponent {
 			const authUser = this.auth.authenticate(user['sessionToken'])
 			if(!authUser) return
 			this.loginEvent.emit("login complete")
-			this.router.navigate(['account'], { queryParams: { type: authUser["user_id"] } })
+			this.router.navigate(['account', authUser["account_type"]])
 		})
 	}
 }
