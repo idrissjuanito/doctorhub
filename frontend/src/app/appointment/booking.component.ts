@@ -67,6 +67,7 @@ export class BookingComponent implements OnInit {
 		}
 		const profile = this.auth.getUserProfile()
 		if(profile) {
+			console.log(profile)
 			profile["email"] = this.auth.userData?.email
 			bookingData["patient"] = profile
 			this.dialog.open(ConfirmBookingComponent, {data: bookingData})

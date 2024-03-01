@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { Observable, Subject, map, switchMap, tap } from "rxjs";
-import { environment } from "src/environments/environment.development";
+import { environment } from "src/environments/environment";
 import { DoctorType, IPatient, UserJWTInfo } from "src/models/app-models";
 
 interface IUser extends UserJWTInfo {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/services/auth.service';
 
 @Component({
@@ -11,6 +12,7 @@ export class AppComponent implements OnInit {
   	title = 'frontend';
   	constructor(public auth: AuthService){}
 	ngOnInit() {
+		console.log(environment.production)
 		this.auth.user$.subscribe({
 			next: user => this.user = user["user_id"],
 			error: error => this.user = null

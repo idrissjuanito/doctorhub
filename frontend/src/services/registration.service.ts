@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { environment } from "src/environments/environment";
 
-const BASE_URL = 'http://localhost:6500'
+const BASE_URL = environment.apiUrl
 interface AuthResp {
 	sessionToken: string
 }
