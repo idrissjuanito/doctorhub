@@ -1,9 +1,13 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment.development";
 
 @Injectable({providedIn: "root"})
 export class AccountService {
+	accountSubject: Subject<object> = new Subject<object>()
+	account$: Observable<object> = this.accountSubject.asObservable()
+
 	constructor(private http: HttpClient) {}
 	updateProfile(userId: string, key: string, value: any) {
 		const token = localStorage.getItem('sessionToken')

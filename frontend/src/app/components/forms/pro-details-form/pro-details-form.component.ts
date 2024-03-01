@@ -45,7 +45,7 @@ export class ProDetailsFormComponent implements OnInit {
 		console.log(formData)
 		const res = this.register.registerInitial(this.entity+'s', formData)
 		res.subscribe(data => {
-			const authUser = this.auth.authenticate(data['sessionToken'])
+			const authUser = this.auth.userData
 			if(!authUser) return
 			this.router.navigate([authUser['user_id']], {relativeTo: this.route})
 		})

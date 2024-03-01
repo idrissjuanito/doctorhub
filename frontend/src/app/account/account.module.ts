@@ -9,13 +9,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AccountSettingsComponent } from '../components/account/account-settings/account-settings.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AppModule } from '../app.module';
+import { ConfirmBookingComponent } from '../components/dialogs/confirm-booking/confirm-dialog-component';
 
 
 
 @NgModule({
   declarations: [
 	AccountComponent,
-    PatientComponent
+    PatientComponent,
+    AccountSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -25,7 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
 	MatInputModule,
 	MatButtonModule,
 	MatIconModule,
-	AccountRoutingModule
+	MatDialogModule,
+	AccountRoutingModule,
   ]
 })
 export class AccountModule {}

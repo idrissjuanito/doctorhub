@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle, } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { BookingModel } from 'src/models/app-models';
+import { BookingModel, IPatient } from 'src/models/app-models';
 import { AuthService } from 'src/services/auth.service';
 import { BookingService } from 'src/services/booking-service';
 
@@ -13,14 +13,14 @@ import { BookingService } from 'src/services/booking-service';
   templateUrl: 'confirm-booking-component.html',
 })
 export class ConfirmBookingComponent implements OnInit {
-	patient!: object
-  constructor(private auth: AuthService,
-			  public dialogRef: MatDialogRef<ConfirmBookingComponent>,
-			  private booking: BookingService,
-			 @Inject(MAT_DIALOG_DATA) public data: BookingModel) {}
+  	constructor(private auth: AuthService,
+			public dialogRef: MatDialogRef<ConfirmBookingComponent>,
+			private booking: BookingService,
+			@Inject(MAT_DIALOG_DATA) public data: BookingModel) {}
 
 	ngOnInit() {
-		this.patient = this.auth.getUserProfile("patient")
+		// const userProfile = this.auth.getUserProfile()
+		// if(userProfile) this.patient
 		// const bookingData = JSON.parse(localStorage.getItem("tempBookingData") || "")
 		// this.data = bookingData
 	}

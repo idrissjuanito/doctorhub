@@ -30,7 +30,7 @@ export class PersonalDetailsFormComponent implements OnInit {
 		private register: RegisterService,
 		public matDialog: MatDialog){}
 	 ngOnInit(){
-		const user_info = this.auth.isAuthenticated()
+		const user_info = this.auth.userData
 		user_info && (this.authUser = user_info)
 		this.authUser || this.router.navigate(['/'])
 	 }
@@ -42,8 +42,8 @@ export class PersonalDetailsFormComponent implements OnInit {
 		const res = this.register.completeProfile(account_type, userId, value)
 		res?.subscribe(data => {
 			this.matDialog.closeAll()
-			this.auth.authenticate(data['sessionToken'])
-			this.authUser = this.auth.isAuthenticated()
+			this.auth.authenticate()
+			this.authUser = this.auth.userData
 			this.router.navigate(['account'], {queryParams: {type: account_type}})
 		})
 	}

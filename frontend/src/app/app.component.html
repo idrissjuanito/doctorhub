@@ -6,12 +6,12 @@
 				type='button'
 				routerLink='/registration'
 				class="text-base text-purple-200 hover:text-white"
-				*ngIf="!auth.isAuthenticated()"
+				*ngIf="!user"
 			>Register</a>
 			<a
 				type='button'
 				routerLink='/account'
-				*ngIf="auth.isAuthenticated()"
+				*ngIf="user"
 				class="text-base flex items-center gap-2 text-purple-200 hover:text-white"
 			>
 			<mat-icon>settings</mat-icon> Settings</a>
@@ -19,10 +19,10 @@
 				type='button'
 				routerLink='/login'
 				class="text-base text-purple-200 hover:text-white"
-				*ngIf="!auth.isAuthenticated()">Login</a>
+				*ngIf="!user">Login</a>
 			<button
 				(click)='auth.logout()'
-				*ngIf="auth.isAuthenticated()"
+				*ngIf="user"
 				class="flex items-center gap-2 text-base text-purple-200 hover:text-white"
 				color='secondary'
 			>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Optional, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Optional, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
@@ -10,7 +10,7 @@ import { MatDialogRef, MatDialogState } from '@angular/material/dialog';
   templateUrl: './login-form.component.html',
   styleUrls: []
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
 	@Output() loginEvent = new EventEmitter<string>()
 	loginForm = new FormGroup({
 		password: new FormControl('', {nonNullable: true,
@@ -25,8 +25,13 @@ export class LoginFormComponent {
 									  Validators.minLength(8)
 								  ]}),
 	})
-	constructor(private auth: AuthService,
-			   private router: Router){}
+	constructor(private auth: AuthService, private router: Router){ }
+	ngOnInit() {
+		this.auth.user$.subscribe(userData => {
+			this.loginEvent.emit("login complete")
+			this.router.navigate(['account', userData["account_type"]])
+		})
+	}
 	submitLogin(){
 		if (!this.loginForm.valid){
 			console.log('email', this.loginForm.get('email')?.invalid)
@@ -35,11 +40,5 @@ export class LoginFormComponent {
 			return
 		}
 		const res = this.auth.login(this.loginForm.value)
-		res.subscribe((user) => {
-			const authUser = this.auth.authenticate(user['sessionToken'])
-			if(!authUser) return
-			this.loginEvent.emit("login complete")
-			this.router.navigate(['account', authUser["account_type"]])
-		})
 	}
 }

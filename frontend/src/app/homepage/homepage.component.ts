@@ -20,8 +20,10 @@ export class HomepageComponent implements OnInit {
 		this.dataservice.fetch<{results: DoctorType[]}>('doctors').subscribe(data => {
 			this.doctors = data.results
 		})
-		const user_info = this.auth.isAuthenticated()
-		user_info && (this.user = user_info["user_id"])
+		this.auth.user$.subscribe({
+			next: user => this.user = user["user_id"],
+			error: error => this.user = null
+		})
 	}
 
 }

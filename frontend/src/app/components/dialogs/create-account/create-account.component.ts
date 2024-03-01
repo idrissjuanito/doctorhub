@@ -14,7 +14,6 @@ export class CreateAccountComponent {
 	signupForm: boolean = true
 	personalDetailsForm: boolean = false
 	accountFormGroup!: FormGroup
-	// loginFormGroup!: FormGroup | undefined
 
 	constructor(private register: RegisterService,
 			   private auth: AuthService,
@@ -30,7 +29,8 @@ export class CreateAccountComponent {
 		console.log(this.accountFormGroup.value)
 		const res = this.register.registerInitial("patients", this.accountFormGroup.value)
 		res.subscribe( data => {
-			this.auth.authenticate(data["sessionToken"])
+			localStorage.setItem("sessionToken", data["sessionToken"])
+			this.auth.authenticate()
 			this.signupForm = false
 			this.personalDetailsForm = true
 		} )

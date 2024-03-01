@@ -41,9 +41,6 @@ export class BookingComponent implements OnInit {
 		const res = this.dataservice.fetch<{results: DoctorType}>("doctors", this.doctorId)
 		res.subscribe(data => this.doctor = data["results"])
 		this.getAvailableSlots()
-		// this.dialog.open(CreateAccountComponent, {
-		// 	maxWidth: "95vw"
-		// })
 	}
 
 	ngOnChanges() {
@@ -68,14 +65,10 @@ export class BookingComponent implements OnInit {
 			notes: this.notes.value || "",
 			doctor: this.doctor
 		}
-		const authUser: UserJWTInfo | null = this.auth.isAuthenticated()
-		if(authUser) {
-			const request = this.auth.getUserProfile<IPatient>(authUser["account_type"])
-			request.subscribe(profile => {
-				const patient = profile["results"]
-				patient["email"] = authUser["email"]
-				bookingData["patient"] = patient
-			})
+		const profile = this.auth.getUserProfile()
+		if(profile) {
+			profile["email"] = this.auth.userData?.email
+			bookingData["patient"] = profile
 			this.dialog.open(ConfirmBookingComponent, {data: bookingData})
 			return
 		}

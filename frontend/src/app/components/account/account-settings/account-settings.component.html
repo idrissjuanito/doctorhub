@@ -1,0 +1,37 @@
+<div class="container flex flex-col items-center justify-center">
+	<h2>Account</h2>
+	<div class="my-12">
+		<label
+		  htmlFor="featured"
+		  class="cursor-pointer text-6xl bg-violet-100 px-10 rounded-md text-center"
+		>
+			<mat-icon color="primary">upload</mat-icon>
+			<input
+				type="file"
+				name="featured"
+				id="featured"
+				(change)="handleFileUpload($event)"
+				class="hidden opacity-0"
+			/>
+		</label>
+	</div>
+	<form [formGroup]="settingForm" (ngSubmit)="submitSettings()">
+		<h2 class="self-start">Account Settings</h2>
+		<mat-form-field>
+			<mat-label>Email Address</mat-label>
+			<input
+					matInput
+					type="email"
+					placeholder="Ex. drjohndoe@gmail.com"
+					formControlName="email" required>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label> new Password</mat-label>
+			<input matInput
+				   type="password"
+				   placeholder="********"
+				   formControlName="password" required>
+		</mat-form-field>
+		<button mat-flat-button type="submit" color="primary" class="self-start"> Save </button>
+	</form>
+</div>
