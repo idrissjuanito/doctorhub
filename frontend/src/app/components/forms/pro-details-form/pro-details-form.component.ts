@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/services/auth.service';
 import { RegisterService } from 'src/services/registration.service';
 
@@ -10,8 +11,10 @@ import { RegisterService } from 'src/services/registration.service';
   styleUrls: []
 })
 export class ProDetailsFormComponent implements OnInit {
-	entity: any | null
+	type: any | null
+    userId: string | undefined
 	accountFormGroup: FormGroup | undefined
+    userSubscription: Subscription | undefined
 	doctorForm = new FormGroup({
 		hospital_name: new FormControl(''),
 		speciality: new FormControl(''),
@@ -28,7 +31,7 @@ export class ProDetailsFormComponent implements OnInit {
 		private register: RegisterService){}
 
 	ngOnInit(){
-		this.entity = this.route.snapshot.paramMap.get('type')
+		this.type = this.route.snapshot.paramMap.get('type')
 	}
 
 	accountFormGroupInit(formGroup: any) {
@@ -37,17 +40,11 @@ export class ProDetailsFormComponent implements OnInit {
 
 	submitProAccountDetails(){
 		let form: FormGroup
-		if (this.entity == 'doctor')
+		if (this.type == 'doctor')
 			form = this.doctorForm
 		else
 			form = this.hospitalForm
 		const formData = {...form.value, ...this.accountFormGroup?.value}
-		console.log(formData)
-		const res = this.register.registerInitial(this.entity+'s', formData)
-		res.subscribe(data => {
-			const authUser = this.auth.userData
-			if(!authUser) return
-			this.router.navigate([authUser['user_id']], {relativeTo: this.route})
-		})
+		this.register.registerInitial(this.type, formData)
 	}
 }

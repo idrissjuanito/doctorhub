@@ -27,11 +27,14 @@ export class LoginFormComponent implements OnInit {
 	})
 	constructor(private auth: AuthService, private router: Router){ }
 	ngOnInit() {
+        console.log(this.auth.user$)
 		this.auth.user$.subscribe(userData => {
+            console.log('login successfull')
 			this.loginEvent.emit("login complete")
 			this.router.navigate(['account', userData["account_type"]])
 		})
 	}
+
 	submitLogin(){
 		if (!this.loginForm.valid){
 			console.log('email', this.loginForm.get('email')?.invalid)

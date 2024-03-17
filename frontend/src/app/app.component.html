@@ -10,7 +10,8 @@
 			>Register</a>
 			<a
 				type='button'
-				routerLink='/account'
+				routerLink='/account/settings'
+                [queryParams]='{type}'
 				*ngIf="user"
 				class="text-base flex items-center gap-2 text-purple-200 hover:text-white"
 			>
@@ -21,7 +22,7 @@
 				class="text-base text-purple-200 hover:text-white"
 				*ngIf="!user">Login</a>
 			<button
-				(click)='auth.logout()'
+				(click)='logout()'
 				*ngIf="user"
 				class="flex items-center gap-2 text-base text-purple-200 hover:text-white"
 				color='secondary'

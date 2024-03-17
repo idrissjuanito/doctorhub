@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RegistrationModule } from './registration/registration.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -28,6 +27,7 @@ import { ProDetailsFormComponent } from './components/forms/pro-details-form/pro
 import { AccountDetailsFormComponent } from './components/forms/account-details-form/account-details-form.component';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
 import { AccountModule } from './account/account.module';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { AccountModule } from './account/account.module';
  	CreateAccountComponent,
   	ProDetailsFormComponent,
 	AccountDetailsFormComponent,
- 	LoginFormComponent
+ 	LoginFormComponent,
+    RegistrationComponent
   ],
   imports: [
 	ReactiveFormsModule,
@@ -59,7 +60,6 @@ import { AccountModule } from './account/account.module';
     BrowserModule,
     BrowserAnimationsModule,
 	HttpClientModule,
-	RegistrationModule,
 	AccountModule,
     AppRoutingModule
   ],

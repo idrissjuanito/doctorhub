@@ -65,9 +65,10 @@ class Profiles(Resource):
         obj = cls(**args)
         cls.insert_record(obj)
         Profile.save()
-        payload = {**account, 'user_id': getattr(obj, f"{tablename}_id")}
+        user_id = getattr(obj, f"{tablename}_id")
+        payload = {**account, 'user_id': user_id}
         token = generate_jwt(payload)
-        return { 'sessionToken': token }
+        return { 'sessionToken': token, 'user_id': user_id }
 
     def put(self, user_info, entity):
         '''
@@ -77,7 +78,6 @@ class Profiles(Resource):
         if entity != 'hospitals':
             person_id = self.new_person(user_info['user_id'])
         profile_id = self.profile_updates(person_id, user_info['account_id']) # creates a assiociated profile record
-        print(entity)
         cls = self.models[entity[:-1]]
         cls.update_records(user_info['user_id'], {'profile_id': profile_id})
         cls.save()

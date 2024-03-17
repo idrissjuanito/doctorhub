@@ -8,7 +8,7 @@ const routes: Routes = [
 	{path: 'account', component: AccountComponent, children: [
 		{path: 'patient', component: PatientComponent},
 		{path: ':type', component: AccountComponent},
-		{path: ':type/settings', component: AccountSettingsComponent}
+		{path: 'settings', component: AccountSettingsComponent}
 	]}
 ]
 @NgModule({

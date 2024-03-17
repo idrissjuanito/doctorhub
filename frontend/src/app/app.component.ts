@@ -9,13 +9,20 @@ import { AuthService } from 'src/services/auth.service';
 })
 export class AppComponent implements OnInit {
 	user: string | null = null
+    type: string | undefined
   	title = 'frontend';
   	constructor(public auth: AuthService){}
 	ngOnInit() {
-		console.log(environment.production)
 		this.auth.user$.subscribe({
-			next: user => this.user = user["user_id"],
+			next: user => {
+                this.user = user["user_id"]
+                this.type = user["account_type"]
+            },
 			error: error => this.user = null
 		})
+        this.auth.authenticate()
 	}
+    logout() {
+        this.auth.logout()
+    }
 }

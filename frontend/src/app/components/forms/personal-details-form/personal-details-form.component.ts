@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { UserJWTInfo } from 'src/models/app-models';
 import { AuthService } from 'src/services/auth.service';
 import { RegisterService } from 'src/services/registration.service';
@@ -12,6 +13,9 @@ import { RegisterService } from 'src/services/registration.service';
   styleUrls: []
 })
 export class PersonalDetailsFormComponent implements OnInit {
+    accountType!: string
+    userId!: string
+    userSubscription: Subscription | undefined
 	personalDetailsForm = new FormGroup({
 		first_name: new FormControl(''),
 		last_name: new FormControl(''),
@@ -22,29 +26,37 @@ export class PersonalDetailsFormComponent implements OnInit {
 		contact_one: new FormControl(''),
 		contact_two: new FormControl('')
 	})
+
 	authUser: UserJWTInfo | null = null
+
 	constructor(
 		private auth: AuthService,
 		private router: Router,
 		private route:  ActivatedRoute,
 		private register: RegisterService,
 		public matDialog: MatDialog){}
+
 	 ngOnInit(){
-		const user_info = this.auth.userData
-		user_info && (this.authUser = user_info)
-		this.authUser || this.router.navigate(['/'])
+		const userId = this.route.snapshot.queryParamMap.get('id')
+        const type = this.route.snapshot.paramMap.get('type')
+        if( userId && type ) {
+            this.userId = userId
+            this.accountType = type
+        } else {
+            this.router.navigate(['/'])
+        }
+        this.auth.user$.subscribe(userData => {
+            this.matDialog.closeAll()
+		    this.router.navigate(['account', type])
+        })
 	 }
+
+     ngOnDestroy(){
+         this.userSubscription && this.userSubscription.unsubscribe()
+     }
 	submitFinal() {
-		if(!this.authUser) return
-		const account_type = this.authUser["account_type"]
-		const userId = this.authUser["user_id"]
+		if(!this.accountType || !this.userId) return
 		const value = this.personalDetailsForm.value
-		const res = this.register.completeProfile(account_type, userId, value)
-		res?.subscribe(data => {
-			this.matDialog.closeAll()
-			this.auth.authenticate()
-			this.authUser = this.auth.userData
-			this.router.navigate(['account'], {queryParams: {type: account_type}})
-		})
+		this.register.completeProfile(this.accountType, this.userId, value)
 	}
 }

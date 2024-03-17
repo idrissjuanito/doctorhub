@@ -1,13 +1,18 @@
 <div class="w-full container py-10 flex flex-col gap-6 items-center">
 	<h2>Registration</h2>
-	<form *ngIf="!type.value">
-		<mat-form-field>
-			<mat-label>You are a...</mat-label>
-			<mat-select [formControl]="type">
-				<mat-option value="doctor">Doctor</mat-option>
-				<mat-option value="hospital">Hospital</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</form>
-	<router-outlet></router-outlet>
+	<div *ngIf="type; else typeChoice">
+        <pro-details-form *ngIf="!userId"></pro-details-form>
+        <personal-details-form *ngIf="userId"></personal-details-form>
+	</div>
 </div>
+<ng-template #typeChoice>
+    <form>
+        <mat-form-field>
+            <mat-label>You are a...</mat-label>
+            <mat-select [formControl]="choiceType">
+                <mat-option value="doctor">Doctor</mat-option>
+                <mat-option value="hospital">Hospital</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</ng-template>

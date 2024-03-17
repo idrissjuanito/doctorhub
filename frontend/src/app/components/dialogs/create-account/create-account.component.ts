@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { RegisterService } from 'src/services/registration.service';
 
@@ -9,32 +10,32 @@ import { RegisterService } from 'src/services/registration.service';
   templateUrl: './create-account.component.html',
   styleUrls: []
 })
-export class CreateAccountComponent {
+export class CreateAccountComponent implements OnInit {
 	loginForm: boolean = false
 	signupForm: boolean = true
-	personalDetailsForm: boolean = false
 	accountFormGroup!: FormGroup
 
 	constructor(private register: RegisterService,
-			   private auth: AuthService,
+                private router: Router,
 			   public matDialog: MatDialog){}
+
+    ngOnInit() {}
+
 	switchForm() {
 		this.loginForm = !this.loginForm
 		this.signupForm = !this.signupForm
 	}
+
 	setAccountFormGroup(formGroup: any) {
 		this.accountFormGroup = formGroup
 	}
+
 	createPatientAccount() {
-		console.log(this.accountFormGroup.value)
-		const res = this.register.registerInitial("patients", this.accountFormGroup.value)
-		res.subscribe( data => {
-			localStorage.setItem("sessionToken", data["sessionToken"])
-			this.auth.authenticate()
-			this.signupForm = false
-			this.personalDetailsForm = true
-		} )
+	    console.log('Creating patient...')
+	    this.register.registerInitial("patient", this.accountFormGroup.value)
+        this.matDialog.closeAll()
 	}
+
 	closeDialog(msg: any) {
 		this.matDialog.closeAll()
 	}

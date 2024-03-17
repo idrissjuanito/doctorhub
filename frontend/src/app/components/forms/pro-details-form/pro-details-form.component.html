@@ -1,6 +1,6 @@
 <form (ngSubmit)="submitProAccountDetails()">
 	<h2 class="self-start">Professional Details</h2>
-	<div [formGroup]="doctorForm" *ngIf="entity == 'doctor'">
+	<div [formGroup]="doctorForm" *ngIf="type == 'doctor'">
 		<mat-form-field>
 			<mat-label>Speciality</mat-label>
 			<input matInput
@@ -20,7 +20,7 @@
 				   formControlName="hospital_name">
 		</mat-form-field>
 	</div>
-	<div [formGroup]="hospitalForm" *ngIf="entity == 'hospital'" class="w-full">
+	<div [formGroup]="hospitalForm" *ngIf="type == 'hospital'" class="w-full">
 		<mat-form-field>
 			<mat-label>Name of clinic/hospital</mat-label>
 			<input matInput
