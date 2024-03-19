@@ -18,7 +18,8 @@ export class AccountComponent implements OnInit {
 			   public matDialog: MatDialog){}
 
 	ngOnInit(){
-        console.log("account page init")
-		!this.auth.userData && this.router.navigate(['/'])
+        this.auth.user$.subscribe({
+            error: err => this.router.navigate(['/'])
+        })
 	}
 }

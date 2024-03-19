@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtPayload, jwtDecode } from "jwt-decode";
-import { Observable, Subject, catchError, map, switchMap, tap } from "rxjs";
+import { Observable, Subject, catchError, map, of, switchMap, tap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { DoctorType, IPatient, UserJWTInfo } from "src/models/app-models";
 
@@ -14,14 +14,16 @@ const BASE_URL = environment.apiUrl
 @Injectable({providedIn: 'root'})
 export class AuthService {
 	userData: IUser | null = null
-	private userSubject: Subject<IUser> = new Subject<IUser>()
-	user$: Observable<IUser> = this.userSubject.asObservable()
+	private userSubject: Subject<IUser | null> = new Subject<IUser | null>()
+	user$: Observable<IUser | null> = this.userSubject.asObservable()
 
 	constructor(private http: HttpClient, private router: Router) {
 		this.user$ = this.user$.pipe(
             switchMap(data => {
+                if (data === null)
+                    throw 'no user'
+                console.log("no errors")
                 const token = localStorage.getItem("sessionToken")
-                console.log('getting user')
                 const URL = BASE_URL+"/profile/"+data["account_type"]+"s"
                 const httpOptions = {
                     headers: new HttpHeaders({ Authorization: 'Bearer '+token
@@ -34,6 +36,11 @@ export class AuthService {
                 }))
 		    }),
             tap(userData => this.userData = userData),
+            catchError(err => {
+                console.log("catching errors")
+                this.userData = null
+                return of(null)
+            }),
         )
    	}
 
@@ -46,11 +53,9 @@ export class AuthService {
 			if (!user_info || Date.now() > (user_info.exp || 0)) {
                 throw new Error("Token expired")
 			}
-            console.log(this.userSubject.isStopped)
 			this.userSubject.next({...user_info, profile: null })
 		} catch (err) {
-            this.userData = null
-			this.userSubject.error("Invalid or expired token")
+			this.userSubject.next(null)
 			token && localStorage.removeItem('sessionToken')
 		}
 	}
@@ -64,7 +69,7 @@ export class AuthService {
 
 	logout () {
 		localStorage.removeItem('sessionToken')
-        this.authenticate()
+        this.userSubject.next(null)
 	}
 
 	getUserProfile(): IPatient | DoctorType | null {

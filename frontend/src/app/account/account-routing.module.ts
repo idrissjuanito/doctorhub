@@ -7,8 +7,8 @@ import { AccountSettingsComponent } from "../components/account/account-settings
 const routes: Routes = [
 	{path: 'account', component: AccountComponent, children: [
 		{path: 'patient', component: PatientComponent},
-		{path: ':type', component: AccountComponent},
-		{path: 'settings', component: AccountSettingsComponent}
+		{path: 'settings', component: AccountSettingsComponent},
+		{path: ':type', component: AccountComponent}
 	]}
 ]
 @NgModule({

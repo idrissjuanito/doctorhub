@@ -21,8 +21,7 @@ export class HomepageComponent implements OnInit {
 			this.doctors = data.results
 		})
 		this.auth.user$.subscribe({
-			next: user => this.user = user["user_id"],
-			error: error => this.user = null
+			next: user => this.user = user?.user_id ?? null
 		})
 	}
 

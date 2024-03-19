@@ -31,7 +31,7 @@ export class LoginFormComponent implements OnInit {
 		this.auth.user$.subscribe(userData => {
             console.log('login successfull')
 			this.loginEvent.emit("login complete")
-			this.router.navigate(['account', userData["account_type"]])
+			this.router.navigate(['account', userData?.account_type])
 		})
 	}
 
